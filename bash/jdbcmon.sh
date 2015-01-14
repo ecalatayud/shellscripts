@@ -50,7 +50,7 @@ fi
 
 path/to/java/java weblogic.WLST /path/to/jdbcmon.py
 
-portic=off
+company=off
 bt=off
 alarma80=off
 alarma95=off
@@ -68,13 +68,13 @@ do
                         echo $LINE  >>/tmp/alarma_pools_95.tmp
                         if [ $horario == "laboral" ]
                         then
-                                portic=on
+                                company=on
                         else
                                 bt=on
                         fi
                 else
                         alarma80=on
-                        portic=on
+                        company=on
                         echo $LINE >>/tmp/alarma_pools_80.tmp
                 fi
         fi
@@ -92,25 +92,25 @@ then
         echo "Servidor Pool Max Actual Estado" >>/tmp/mail_bt.tmp
         echo "-----------------------------------------" >>/tmp/mail_bt.tmp
         cat /tmp/alarma_pools_95.tmp >>/tmp/mail_bt.tmp
-        cat /tmp/mail_bt.tmp| mailx -r alarms_mail@domain.com -c alarms_mail@domain.com -s"Reinicio de servidores weblogic urgente" alarms_mail@portic.net
+        cat /tmp/mail_bt.tmp| mailx -r alarms_mail@domain.com -c alarms_mail@domain.com -s"Reinicio de servidores weblogic urgente" alarms_mail@company.net
         rm /tmp/alarma_pools_95.tmp
         rm /tmp/alarma_pools_80.tmp
         rm /tmp/mail_bt.tmp
 else
-        if [ $portic == "on" ]
+        if [ $company == "on" ]
         then
                 if [ $alarma95 == "on" ]
                 then
-                        echo "Hay uno o varios servidores weblogic del entorno de producción con pools de conexiones a base de datos por encima del 95%." >>/tmp/mail_portic.tmp
-                        echo "Los siguientes servidores han de ser reiniciados urgentemente:" >>/tmp/mail_portic.tmp
-                        echo "" >>/tmp/mail_portic.tmp
-                        echo "Servidor Pool Max Actual Estado" >>/tmp/mail_portic.tmp
-                        echo "------------------------------------------------" >>/tmp/mail_portic.tmp
-                        cat /tmp/alarma_pools_95.tmp >>/tmp/mail_portic.tmp
-                        cat /tmp/mail_portic.tmp| mailx -r alarms_mail@domain.com -c alarms_mail@domain.com -s"Reinicio de servidores weblogic urgente" administracio@domain.com
+                        echo "Hay uno o varios servidores weblogic del entorno de producción con pools de conexiones a base de datos por encima del 95%." >>/tmp/mail_company.tmp
+                        echo "Los siguientes servidores han de ser reiniciados urgentemente:" >>/tmp/mail_company.tmp
+                        echo "" >>/tmp/mail_company.tmp
+                        echo "Servidor Pool Max Actual Estado" >>/tmp/mail_company.tmp
+                        echo "------------------------------------------------" >>/tmp/mail_company.tmp
+                        cat /tmp/alarma_pools_95.tmp >>/tmp/mail_company.tmp
+                        cat /tmp/mail_company.tmp| mailx -r alarms_mail@domain.com -c alarms_mail@domain.com -s"Reinicio de servidores weblogic urgente" administracio@domain.com
                         rm /tmp/alarma_pools_95.tmp
                         rm /tmp/alarma_pools_80.tmp
-                        rm /tmp/mail_portic.tmp
+                        rm /tmp/mail_company.tmp
                 else
                         cat /tmp/alarma_pools_80.tmp|mailx -s"Alarma, pools de conexiones por encima del 80%" alarms_mail@domain.com
                         rm /tmp/alarma_pools_80.tmp
